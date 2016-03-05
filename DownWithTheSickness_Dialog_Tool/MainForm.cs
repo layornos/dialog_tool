@@ -127,24 +127,41 @@ namespace DownWithTheSickness_Dialog_Tool
                     rows.Add(values);
             }
             //Write Stringlist to Database
-            
             Scene s = new Scene(tabScenes.SelectedTab.Text);
             s.dialogs = new List<Dialog>();
+            fillDialogIntoScene(rows, s);
+            ddh.writeSceneToDatabase(s);
+        }
+
+        private void fillDialogIntoScene(List<List<string>> rows, Scene s)
+        {
             foreach (List<string> row in rows)
             {
                 string[] speakerSplit = row[1].Split(' ');
-                string[] listenersSplit = splitString(row[2]);
+                string[] listenersFirstSplit = splitString(row[2]);
+                List<string[]> listenersSecondSplit = new List<string[]>();
+                foreach (string name in listenersFirstSplit)
+                {
+                    string[] split = name.Split(' ');
+                    listenersSecondSplit.Add(split);
+                }
+
+
+                List<Character> addressed_to = new List<Character>();
+                foreach (string[] character in listenersSecondSplit)
+                {
+                    addressed_to.Add(new Character() { name = character[1], forename = character[0] });
+                }
+
                 Dialog d = new Dialog
                 {
-                    speaker = new Character { name = speakerSplit[0] , forename = speakerSplit[1] },
-                    addressed_to = new List<Character> { new Character() { name = "Doe", forename = "Felix" },
-                                                     new Character() { name = "Doe", forename = "Chappy" }},
+                    speaker = new Character { name = speakerSplit[1], forename = speakerSplit[0] },
+                    addressed_to = addressed_to,
                     dialog_text = row[3],
                     dialog_number = 1
                 };
                 s.dialogs.Add(d);
             }
-            ddh.writeRowsToDatabase(rows);
         }
 
         private string[] splitString(String s)

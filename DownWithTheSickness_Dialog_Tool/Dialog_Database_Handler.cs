@@ -55,7 +55,7 @@ namespace DownWithTheSickness_Dialog_Tool
 
         private void addDialog(Scene s, Dialog d)
         {
-            dbConn.Open();
+            //dbConn.Open();
 
             int speakerID = getSpeakerID(d);
             int dialogID = getDialogID(d, speakerID);
@@ -63,7 +63,7 @@ namespace DownWithTheSickness_Dialog_Tool
             AddSpeakerTextAndNumber(d, dialogID);
             AddAdressedToInformation(d, speakerID, dialogID);
             AddDialogsInScene(s, d, speakerID, dialogID);
-            dbConn.Close();
+            //dbConn.Close();
         }
         private void deleteDialog(Scene s, Dialog d)
         {
@@ -80,7 +80,7 @@ namespace DownWithTheSickness_Dialog_Tool
 
         private void addSceneName(Scene scene)
         {
-            dbConn.Open();
+            //dbConn.Open();
             int sceneID = getSceneID(scene);
             if (sceneID == 0)
             {
@@ -91,7 +91,7 @@ namespace DownWithTheSickness_Dialog_Tool
                     cmd.ExecuteNonQuery();
                 }
             }
-            dbConn.Close();
+            //dbConn.Close();
         }
         private void deleteSceneName(Scene scene)
         {
@@ -153,9 +153,10 @@ namespace DownWithTheSickness_Dialog_Tool
             }
         }
 
-        internal void writeRowsToDatabase(List<List<string>> rows)
+        internal void writeSceneToDatabase(Scene s)
         {
-            throw new NotImplementedException();
+            addScene(s); 
+            //throw new NotImplementedException();
         }
 
         private void DeleteDialogsInScene(Scene s, Dialog d, int speakerID, int dialogID)
@@ -357,7 +358,7 @@ namespace DownWithTheSickness_Dialog_Tool
 
         private void addCharacter(Character character)
         {
-            dbConn.Open();
+            //dbConn.Open();
             bool exists = false;
             string checkQuery = "SELECT COUNT(*) FROM FIGURE WHERE char_name=? AND forename=?;";
             using (OleDbCommand cmd = new OleDbCommand(checkQuery, dbConn))
@@ -384,7 +385,7 @@ namespace DownWithTheSickness_Dialog_Tool
                     cmd.ExecuteNonQuery();
                 }
             }
-            dbConn.Close();
+            //dbConn.Close();
         }
         private void deleteCharacter(Character character)
         {
@@ -468,6 +469,7 @@ namespace DownWithTheSickness_Dialog_Tool
         {
             foreach (Dialog d in list)
             {
+                // Abfrage stimmt nicht ganz!
                 string checkQuery = @"SELECT FIGURE.char_name, FIGURE.forename, ADRESSED_TO.listener, DIALOG.ID
                                       FROM SCENES INNER JOIN ((FIGURE INNER JOIN (DIALOG INNER JOIN ADRESSED_TO ON DIALOG.ID = ADRESSED_TO.dialog) ON FIGURE.ID = ADRESSED_TO.listener) INNER JOIN DIALOGS_IN_SCENE ON DIALOG.ID = DIALOGS_IN_SCENE.dialog) ON SCENES.ID = DIALOGS_IN_SCENE.scene
                                       WHERE (((ADRESSED_TO.dialog)=[DIALOG].[ID]) AND ((DIALOG.dialog_number)=?) AND ((DIALOGS_IN_SCENE.dialog)=[DIALOG].[id]) AND ((DIALOGS_IN_SCENE.scene)=[SCENES].[ID] AND [SCENES].[scene_name]=?));";
