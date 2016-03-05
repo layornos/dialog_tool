@@ -23,6 +23,7 @@ namespace DownWithTheSickness_Dialog_Tool
         {
             tabScenes.Dock = DockStyle.Fill;
             tabScenes.SizeMode = TabSizeMode.Fixed;
+            tabScenes.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right );
             tblLayout.Dock = DockStyle.Fill;
             List<Scene> scenes = ddh.getAllScenes();
             foreach (Scene s in scenes)
@@ -39,6 +40,8 @@ namespace DownWithTheSickness_Dialog_Tool
             newTabPage.Size = tabScenes.Size;
 
             DataGridView dgv = new DataGridView();
+            //dgv.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right);
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv.Columns.Add("Number", "Number");
             dgv.Columns.Add("Speaker", "Speaker");
             dgv.Columns.Add("Listener(s)", "Listener(s)");
@@ -101,6 +104,30 @@ namespace DownWithTheSickness_Dialog_Tool
         {
             FrmInputSceneName input = new FrmInputSceneName(this);
             input.Visible = true;
+        }
+
+        private void btnSaveActiveScene_Click(object sender, EventArgs e)
+        {
+            //Create Stringlist
+            List<List<string>> rows = new List<List<string>>();
+
+            DataGridView dgv = tabScenes.SelectedTab.Controls[0] as DataGridView;
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                List<string> values = new List<string>();
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    //Add value to Stringlist
+                    if (cell.Value != null)
+                    {
+                        values.Add(cell.Value.ToString());
+                    }
+                }
+                if (values.Count > 0)
+                    rows.Add(values);
+            }
+            //Write Stringlist to Database
+            ddh.writeRowsToDatabase(rows);
         }
     }
 }

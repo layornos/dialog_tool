@@ -152,6 +152,12 @@ namespace DownWithTheSickness_Dialog_Tool
                 }
             }
         }
+
+        internal void writeRowsToDatabase(List<List<string>> rows)
+        {
+            throw new NotImplementedException();
+        }
+
         private void DeleteDialogsInScene(Scene s, Dialog d, int speakerID, int dialogID)
         {
             int sceneID = getSceneID(s);
