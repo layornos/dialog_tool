@@ -127,7 +127,32 @@ namespace DownWithTheSickness_Dialog_Tool
                     rows.Add(values);
             }
             //Write Stringlist to Database
+            
+            Scene s = new Scene(tabScenes.SelectedTab.Text);
+            s.dialogs = new List<Dialog>();
+            foreach (List<string> row in rows)
+            {
+                string[] speakerSplit = row[1].Split(' ');
+                string[] listenersSplit = splitString(row[2]);
+                Dialog d = new Dialog
+                {
+                    speaker = new Character { name = speakerSplit[0] , forename = speakerSplit[1] },
+                    addressed_to = new List<Character> { new Character() { name = "Doe", forename = "Felix" },
+                                                     new Character() { name = "Doe", forename = "Chappy" }},
+                    dialog_text = row[3],
+                    dialog_number = 1
+                };
+                s.dialogs.Add(d);
+            }
             ddh.writeRowsToDatabase(rows);
+        }
+
+        private string[] splitString(String s)
+        {
+            string[] lines = s.Split('\n');
+            for (int i = 0; i < lines.Length; i += 1)
+                lines[i] = lines[i].Trim();
+            return lines;
         }
     }
 }
