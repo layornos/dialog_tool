@@ -158,7 +158,7 @@ namespace DownWithTheSickness_Dialog_Tool
                     speaker = new Character { name = speakerSplit[1], forename = speakerSplit[0] },
                     addressed_to = addressed_to,
                     dialog_text = row[3],
-                    dialog_number = 1
+                    dialog_number = Int32.Parse(row[0]) 
                 };
                 s.dialogs.Add(d);
             }
@@ -170,6 +170,12 @@ namespace DownWithTheSickness_Dialog_Tool
             for (int i = 0; i < lines.Length; i += 1)
                 lines[i] = lines[i].Trim();
             return lines;
+        }
+
+        private void btnCreateUser_Click(object sender, EventArgs e)
+        {
+            FrmCreateUser createUser = new FrmCreateUser();
+            createUser.Visible = true;
         }
     }
 }
